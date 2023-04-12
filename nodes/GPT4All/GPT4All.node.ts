@@ -30,6 +30,17 @@ export class GPT4All implements INodeType {
 				default: '',
 				placeholder: 'GPT4All Prompt',
 				description: 'GPT4All Prompt',
+			},
+			{
+				displayName: 'Thread Count',
+				name: 'thread',
+				type: 'number',
+				required: false,
+				typeOptions: {
+					minValue: 1,
+				},
+				default: 4,
+				description: 'Number of thread to run GPT4All',
 			}
 		],
 	};
@@ -39,30 +50,36 @@ export class GPT4All implements INodeType {
 	// with whatever the user has entered.
 	// You can make async calls and use `await`.
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-
-		// Init GPT4All instance
-		const gpt4all = new gpt('gpt4all-lora-quantized', false);
-
-		console.info('Initialize gpt');
-		await gpt4all.init();
-		console.info('Open gpt model');
-		await gpt4all.open();
-
 		const items = this.getInputData();
 
 		let item: INodeExecutionData;
 		let prompt: string;
+		let response: string;
+		let threads: number;
+
+		threads = this.getNodeParameter('thread', 0, 4) as number;
+
+		// Init GPT4All instance
+		const gpt4all = new gpt('gpt4all-lora-quantized', false, {
+			threads,
+		});
+
+		console.info('Initialize gpt');
+		await gpt4all.init();
 
 		// Iterates over all input items and add the key "myString" with the
 		// value the parameter "myString" resolves to.
 		// (This could be a different value for each item in case it contains an expression)
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
 			try {
+				console.info('Open gpt model');
+				await gpt4all.open();
 				prompt = this.getNodeParameter('prompt', itemIndex, '') as string;
 				item = items[itemIndex];
 
 				console.info('Execute prompt', prompt);
-				item.json['output'] = await gpt4all.prompt(prompt);
+				response = await gpt4all.prompt(prompt);
+				item.json['output'] = response.replace(/\[\d+m/g, "");
 			} catch (error) {
 				// This node should never fail but we want to showcase how
 				// to handle errors.
@@ -80,10 +97,10 @@ export class GPT4All implements INodeType {
 						itemIndex,
 					});
 				}
+			} finally {
+				gpt4all.close();
 			}
 		}
-
-		gpt4all.close();
 
 		return this.prepareOutputData(items);
 	}
