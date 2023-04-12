@@ -2,7 +2,7 @@
 
 This is an n8n community node. It lets you use self hosted [GPT4All](https://github.com/nomic-ai/gpt4all) in your n8n workflows.
 
-GPT4ALL is a assistant like LLM based on Meta LLaMa.
+GPT4ALL is an ecosystem of open-source chatbots trained on a massive collections of clean assistant data including code, stories and dialogue.
 
 [n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/reference/license/) workflow automation platform.
 
