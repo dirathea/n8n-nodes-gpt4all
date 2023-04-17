@@ -35,7 +35,6 @@ export class GPT4All implements INodeType {
 				displayName: 'Thread Count',
 				name: 'thread',
 				type: 'number',
-				required: false,
 				typeOptions: {
 					minValue: 1,
 				},

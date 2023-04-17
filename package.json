@@ -1,7 +1,7 @@
 {
   "name": "n8n-nodes-gpt4all",
   "version": "0.1.0",
-  "description": "",
+  "description": "N8N Node to run GPT4All",
   "keywords": [
     "n8n-community-node-package"
   ],
