@@ -1,5 +1,5 @@
 {
-  "name": "n8n-nodes-gpt4all",
+  "name": "@dirathea/n8n-nodes-gpt4all",
   "version": "0.1.0",
   "description": "N8N Node to run GPT4All",
   "keywords": [
